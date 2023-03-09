@@ -65,7 +65,7 @@ ForestPlot.forestplot([[0.2,1.2], [0.8,1.4], [0.6, 0.8], [1.2, 1.6], [0.3, 0.7],
      logscale = true, printci = true, title = ["" "Title"], size = (800, 400))
 ```
 
-<img src=""  width="50%" height="50%">
+<img src="https://github.com/PharmCat/ForestPlot.jl/blob/ee01ff72f999c3e54aa0448adec28b68e759cfd8/img/plot1.png"  width="50%" height="50%">
 
 
 #### Example 3 (no source)
@@ -78,4 +78,4 @@ ForestPlot.forestplot([[0.2,1.2], [0.8,1.4], [0.6, 0.8], [1.2, 1.6], [0.3, 0.7],
      logscale = true, printci = true, title = "Title")
 ```
 
-<img src=""  width="50%" height="50%">
+<img src="https://github.com/PharmCat/ForestPlot.jl/blob/ee01ff72f999c3e54aa0448adec28b68e759cfd8/img/plot2.png"  width="50%" height="50%">
