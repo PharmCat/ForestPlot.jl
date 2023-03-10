@@ -24,7 +24,10 @@ By default plot is logscaled.
 * `metric` - vector of metric estimates;
 * `printci` - print confidence interval;
 * `summary` - print summary object (Dict);
-* `logscale` - if true CI will be transformed (`exp` function used).
+* `logscale` - if true CI will be transformed (`exp` function used);
+* `cimsz` - CI marker size, `-1` or any value < 0 - auto;
+* `cimszwts` - CI marker size weights (if `nothing` - `metric` will be used);
+* `size` - size of plot.
 
 #### Example
 
@@ -60,9 +63,9 @@ summary = Dict(:ci =>[0.8, 1.1], :est => 0.95, :markershape => :rtriangle), logs
 ```
 ForestPlot.forestplot([[0.2,1.2], [0.8,1.4], [0.6, 0.8], [1.2, 1.6], [0.3, 0.7], [1.2, 1.5], [1.2, 1.3]], 
     metric = [1.0, 1.2, 0.7, 1.3, 0.5, 1.2, 1.3], source = ["A", "B", "C", "D", "E", "F", "G"],
-     sourcelabel = "Study:", metriclabel = "Estimate", 
-     summary= Dict(:ci => [0.75,1.15], :est => 0.9), 
-     logscale = true, printci = true, title = ["" "Title"], size = (800, 400))
+    sourcelabel = "Study:", metriclabel = "Estimate", 
+    summary= Dict(:ci => [0.75,1.15], :est => 0.9), 
+    logscale = true, printci = true, title = ["" "Title"], size = (800, 400))
 ```
 
 <img src="https://github.com/PharmCat/ForestPlot.jl/blob/ee01ff72f999c3e54aa0448adec28b68e759cfd8/img/plot1.png"  width="50%" height="50%">
@@ -73,9 +76,9 @@ ForestPlot.forestplot([[0.2,1.2], [0.8,1.4], [0.6, 0.8], [1.2, 1.6], [0.3, 0.7],
 ```
 ForestPlot.forestplot([[0.2,1.2], [0.8,1.4], [0.6, 0.8], [1.2, 1.6], [0.3, 0.7], [1.2, 1.5], [1.2, 1.3]], 
     metric = [1.0, 1.2, 0.7, 1.3, 0.5, 1.2, 1.3],
-     sourcelabel = "Study:", metriclabel = "Estimate", 
-     summary= Dict(:ci => [0.75,1.15], :est => 0.9), 
-     logscale = true, printci = true, title = "Title")
+    sourcelabel = "Study:", metriclabel = "Estimate", 
+    summary= Dict(:ci => [0.75,1.15], :est => 0.9), 
+    logscale = true,title = "Title")
 ```
 
 <img src="https://github.com/PharmCat/ForestPlot.jl/blob/ee01ff72f999c3e54aa0448adec28b68e759cfd8/img/plot2.png"  width="50%" height="50%">

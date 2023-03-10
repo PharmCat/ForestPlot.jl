@@ -8,7 +8,7 @@ export forestplot
 """
     forestplot(ci; sourcelabel = "Source:", metriclabel = "OR", cilabel = "CI95%", 
     source = nothing, metric = nothing, printci = false,
-    summary = nothing, logscale = true, kwargs...)
+    summary = nothing, logscale = true, cimsz = -1, cimszwts = nothing, size = (600, 400), kwargs...)
 
 By default plot is logscaled.
 
@@ -17,7 +17,10 @@ By default plot is logscaled.
 * `metric` - vector of metric estimates;
 * `printci` - print confidence interval;
 * `summary` - print summary object (Dict);
-* `logscale` - if true CI will be transformed (`exp` function used).
+* `logscale` - if true CI will be transformed (`exp` function used);
+* `cimsz` - CI marker size, `-1` or any value < 0 - auto;
+* `cimszwts` - CI marker size weights (if `nothing` - `metric` will be used);
+* `size` - size of plot.
 
 
 
@@ -63,7 +66,7 @@ logscale = true, printci = true, title = ["" "Title"], size = (800, 400))
 """
 function forestplot(ci; sourcelabel = "Source:", metriclabel = "OR", cilabel = "CI95%", 
     source = nothing, metric = nothing, printci = false,
-    summary = nothing, logscale = true, cimsz = -1, size = (600, 400), kwargs...)
+    summary = nothing, logscale = true, cimsz = -1, cimszwts = nothing, size = (600, 400), kwargs...)
 
     #size=(800,400)
     lines = length(ci) + 3
@@ -89,11 +92,11 @@ function forestplot(ci; sourcelabel = "Source:", metriclabel = "OR", cilabel = "
         plot!(p, func.(ci[i]), fill(sty - i, 2), markershape = :vline, linecolor = :blue, markercolor = :blue)
     end
 
-    if cimsz < 0 && !isnothing(metric)
-        minm = minimum(metric)
-        c = (maximum(metric) - minm)/3 
-
-        cimsz = @. (metric - minm) / c + 3 
+    if cimsz < 0 && (!isnothing(metric) || !isnothing(cimszwts)) 
+        if isnothing(cimszwts) cimszwts = metric end
+        minm = minimum(cimszwts)
+        c = (maximum(cimszwts) - minm)/3 
+        cimsz = @. (cimszwts - minm) / c + 3 
     end
 
     if !isnothing(metric)
