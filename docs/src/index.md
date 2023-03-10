@@ -15,7 +15,7 @@ ENV["GKSwstype"] = "nul"
 # Examples
 
 ```@example fpexample
-using ForestPlot
+using ForestPlot, Plots
 
 p = forestplot([[0.2,1.2], [0.8,1.4], [0.6, 0.8], [1.2, 1.6]], 
     metric = [1.0, 1.2, 0.7, 1.3], source = ["A", "B", "C", "D"],
