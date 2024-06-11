@@ -20,8 +20,10 @@ By default plot is logscaled.
 * `logscale` - if true CI will be transformed (`exp` function used);
 * `cimsz` - CI marker size, `-1` or any value < 0 - auto;
 * `cimszwts` - CI marker size weights (if `nothing` - `metric` will be used);
-* `size` - size of plot.
-
+* `size` - size of plot;
+* metriclabel = "OR" - label for metrics values;
+* cilabel = "CI95%"- label for intervals values 
+* ps = 10 - font size in points;
 
 
 # Example
@@ -41,7 +43,7 @@ Summary is a Dict() with keywords:
 
 * :ci
 * :est
-* :vline
+* :vline (true/false or vlues for vertical lines)
 * :markershape
 * :markersize
 
@@ -65,8 +67,8 @@ logscale = true, printci = true, title = ["" "Title"], size = (800, 400))
 
 """
 function forestplot(ci; sourcelabel = "Source:", metriclabel = "OR", cilabel = "CI95%", 
-    source = nothing, metric = nothing, printci = false,
-    summary = nothing, logscale = true, cimsz = -1, cimszwts = nothing, size = (600, 400), kwargs...)
+    source = nothing, metric = nothing, printci = false, refline::Union{Real, Bool} = 1,
+    summary = nothing, logscale = true, cimsz = -1, cimszwts = nothing, size = (600, 400), ps = 10, kwargs...)
 
     #size=(800,400)
     lines = length(ci) + 3
@@ -104,6 +106,7 @@ function forestplot(ci; sourcelabel = "Source:", metriclabel = "OR", cilabel = "
         plot!(func.(metric), my, seriestype= :scatter, markershape = :rect, markercolor = :gray, markeralpha = 0.8, markersize = cimsz, legend = false)
     end
 
+    # Print summary CI
     if !isnothing(summary) && haskey(summary, :ci) && haskey(summary, :est)
         if haskey(summary, :markershape)
             ms = summary[:markershape]
@@ -117,37 +120,44 @@ function forestplot(ci; sourcelabel = "Source:", metriclabel = "OR", cilabel = "
         end
         plot!(p, func.(summary[:ci]), fill(1, 2), markershape = :vline, linecolor = :red, markercolor = :red)
         plot!([func(summary[:est])], [1], seriestype= :scatter, markershape = ms, markercolor = :red, legend = false, markersize = msz)
-        if !(haskey(summary, :vline) && summary[:vline] == false)
-            plot!(p, func.([summary[:est], summary[:est]]),[0, 10.5], line = (:dash, 1.5), linealpha = 0.7, linecolor = :red)
-        end
     end
-
-    plot!(p, func.([1, 1]),[0, 10.5]; linetype=:line, linealpha = 0.7,  linecolor = :black, line = (:dot, 1.5))
-    plot!(p; ylims = ylims, xlims = xlims, yshowaxis = false, ticks = (func.(ticks), ticks))
+    if !isnothing(summary) && haskey(summary, :vline) && !(summary[:vline] === false) # Print Vlines
+        if summary[:vline] === true && haskey(summary, :est) 
+            plot!(p, func.([summary[:est], summary[:est]]),[0, sty], line = (:dash, 1.5), linealpha = 0.7, linecolor = :red)
+        else 
+            for v in summary[:vline]
+                plot!(p, func.([v, v]),[0, sty], line = (:dash, 1.5), linealpha = 0.7, linecolor = :red)
+            end
+        end 
+    end
+    if !(refline === false)
+        plot!(p, func.([refline, refline]),[0, sty]; linetype=:line, linealpha = 0.7,  linecolor = :black, line = (:dot, 1.5))
+    end
+    plot!(p; ylims = ylims, xlims = xlims, yshowaxis = false, ticks = (func.(ticks), round.(ticks, sigdigits=3))) # (@. round(func(ticks), digits=2), ticks))
 
     if !isnothing(source)
         tp = plot(showaxis = false, xlims=(0, 2.5), ylims = ylims, size = size)
-        t = Plots.text(sourcelabel, halign = :left, family = "Palatino Bold")
+        t = Plots.text(sourcelabel, halign = :left, family = "Palatino Bold", pointsize = ps)
         annotate!(tp, 0, sty, t)
         for i = 1:length(source)
-            t = Plots.text(source[i], halign = :left, family = "Palatino")
+            t = Plots.text(source[i], halign = :left, family = "Palatino", pointsize = ps)
             annotate!(tp, 0, sty - i, t)
         end
 
         if !isnothing(metric) 
-            t = Plots.text(metriclabel, halign = :left, family = "Palatino Bold")
+            t = Plots.text(metriclabel, halign = :left, family = "Palatino Bold", pointsize = ps)
             annotate!(tp, 1.6, sty, t)
             for i = 1:length(metric)
-                t = Plots.text(string(round(metric[i], digits = 3)), halign = :left, family = "Palatino")
+                t = Plots.text(string(round(metric[i], digits = 3)), halign = :left, family = "Palatino", pointsize = ps)
                 annotate!(tp, 1.8, sty - i, t)
             end
         end
 
         if printci
-            t = Plots.text(cilabel, halign = :left, family = "Palatino Bold")
+            t = Plots.text(cilabel, halign = :left, family = "Palatino Bold", pointsize = ps)
             annotate!(tp, 2.3, sty, t)
             for i = 1:length(ci)
-                t = Plots.text(string("(",round(ci[i][1], digits = 3), "-", round(ci[i][2], digits = 3), ")"), halign = :left, family = "Palatino")
+                t = Plots.text(string("(",round(ci[i][1], sigdigits = 4), "-", round(ci[i][2], sigdigits = 4), ")"), halign = :left, family = "Palatino", pointsize = ps)
                 annotate!(tp, 2.2, sty - i, t)
             end
         end

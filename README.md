@@ -27,7 +27,10 @@ By default plot is logscaled.
 * `logscale` - if true CI will be transformed (`exp` function used);
 * `cimsz` - CI marker size, `-1` or any value < 0 - auto;
 * `cimszwts` - CI marker size weights (if `nothing` - `metric` will be used);
-* `size` - size of plot.
+* `size` - size of plot;
+* metriclabel = "OR" - label for metrics values;
+* cilabel = "CI95%"- label for intervals values 
+* ps = 10 - font size in points;
 
 #### Example
 
@@ -46,7 +49,7 @@ Summary is a Dict() with keywords:
 
 * :ci
 * :est
-* :vline
+* :vline  (true/false or vlues for vertical lines)
 * :markershape
 * :markersize
 
