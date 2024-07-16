@@ -133,7 +133,7 @@ function forestplot(ci; sourcelabel = "Source:", metriclabel = "OR", cilabel = "
     if !(refline === false)
         plot!(p, func.([refline, refline]),[0, sty]; linetype=:line, linealpha = 0.7,  linecolor = :black, line = (:dot, 1.5))
     end
-    plot!(p; ylims = ylims, xlims = xlims, yshowaxis = false, ticks = (func.(ticks), round.(ticks, sigdigits=3))) # (@. round(func(ticks), digits=2), ticks))
+    plot!(p; ylims = ylims, xlims = xlims, yshowaxis = false, ticks = (func.(ticks), round.(ticks, sigdigits=3)), kwargs...) # (@. round(func(ticks), digits=2), ticks))
 
     if !isnothing(source)
         tp = plot(showaxis = false, xlims=(0, 2.5), ylims = ylims, size = size)
@@ -163,7 +163,7 @@ function forestplot(ci; sourcelabel = "Source:", metriclabel = "OR", cilabel = "
         end
 
         l = @layout [a b{0.50w}]
-        return plot(tp, p; layout = l, legend = false, kwargs...)
+        return plot(tp, p; layout = l, legend = false)
     else
         return plot!(p; kwargs...)
     end
