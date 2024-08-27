@@ -40,4 +40,10 @@ using Test
      summary= Dict(:ci => [0.75,1.15], :est => 0.9), 
      logscale = false, title = ["" "Title"], size = (800, 400))
 
+     @test_nowarn ForestPlot.forestplot([[0.2,0.6]])
+     
+     @test_nowarn ForestPlot.forestplot([[0.2,0.6]], ticksn = 10) 
+
+     @test_nowarn ForestPlot.forestplot([[0.2,0.6]], ticksn = 15) 
+
 end

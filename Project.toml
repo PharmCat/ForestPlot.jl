@@ -1,7 +1,7 @@
 name = "ForestPlot"
 uuid = "4c160800-dae9-4e88-8d4c-769bf7c259e1"
 authors = ["Vladimir Arnautov"]
-version = "0.1.1"
+version = "0.1.2"
 
 [deps]
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"

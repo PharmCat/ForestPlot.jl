@@ -8,7 +8,7 @@ export forestplot
 """
     forestplot(ci; sourcelabel = "Source:", metriclabel = "OR", cilabel = "CI95%", 
     source = nothing, metric = nothing, printci = false,
-    summary = nothing, logscale = true, cimsz = -1, cimszwts = nothing, size = (600, 400), kwargs...)
+    summary = nothing, logscale = true, cimsz = -1, cimszwts = nothing, size = (600, 400), ticksn = 5, kwargs...)
 
 By default plot is logscaled.
 
@@ -21,6 +21,7 @@ By default plot is logscaled.
 * `cimsz` - CI marker size, `-1` or any value < 0 - auto;
 * `cimszwts` - CI marker size weights (if `nothing` - `metric` will be used);
 * `size` - size of plot;
+* `ticksn` - number of ticks;
 * metriclabel = "OR" - label for metrics values;
 * cilabel = "CI95%"- label for intervals values 
 * ps = 10 - font size in points;
@@ -68,7 +69,7 @@ logscale = true, printci = true, title = ["" "Title"], size = (800, 400))
 """
 function forestplot(ci; sourcelabel = "Source:", metriclabel = "OR", cilabel = "CI95%", 
     source = nothing, metric = nothing, printci = false, refline::Union{Real, Bool} = 1,
-    summary = nothing, logscale = true, cimsz = -1, cimszwts = nothing, size = (600, 400), ps = 10, kwargs...)
+    summary = nothing, logscale = true, cimsz = -1, cimszwts = nothing, size = (600, 400), ticksn = 5, ps = 10, kwargs...)
 
     #size=(800,400)
     lines = length(ci) + 3
@@ -86,7 +87,8 @@ function forestplot(ci; sourcelabel = "Source:", metriclabel = "OR", cilabel = "
     maxx = round((maximum(x -> x[2], ci) - 0.1)/2, digits = 1)*2 + 0.2
     minx = round((minimum(x -> x[1], ci) - 0.1)/2, digits = 1)*2 
     xlims = func.((minx, maxx))
-    ticks = collect(minx:0.2*floor((maxx - minx)/0.2/4):maxx)
+    #ticks = collect(minx:0.2*floor((maxx - minx)/0.2/4):maxx)
+    ticks =  collect(range(minx, maxx, length = ticksn))
 
     p = plot(size = size)
 
